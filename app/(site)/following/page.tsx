@@ -1,13 +1,11 @@
-import { getServerSession } from "next-auth"
-import { authOptions } from "../../api/auth/[...nextauth]/route";
-import {redirect} from 'next/navigation'
+'use client'
 
 import Header from "@/components/Header";
 import Posts from "@/components/Posts";
 
-const Following = async () => {
-    const session = await getServerSession(authOptions);
-    if (!session) redirect("/login");
+import { useEffect, useState } from "react";
+
+const Following = () => {
 
     return (
         <div className="text-slate-600">

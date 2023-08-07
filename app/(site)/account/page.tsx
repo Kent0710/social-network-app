@@ -1,14 +1,28 @@
-import { getServerSession } from "next-auth"
-import { authOptions } from "../../api/auth/[...nextauth]/route";
-import {redirect} from 'next/navigation'
+'use client'
 
 import Header from "@/components/Header"
 import Profile from "@/components/Profile"
 import Posts from "@/components/Posts";
 
-const Account = async () => {
-    const session = await getServerSession(authOptions);
-    if (!session) redirect("/login");
+import { Post } from "@/types";
+
+import { useEffect, useState } from "react";
+
+import { getCurrentUserPosts } from "@/app/actions/getCurrentUserPosts";
+
+const Account = () => {
+    const [currentUserPosts, setCurrentUserPosts] = useState<Post[]>([]);
+    useEffect(() => {
+
+        async function getDBData() {
+            const fetchedCurrentUserPosts = await getCurrentUserPosts();
+            console.log(fetchedCurrentUserPosts);
+            if (fetchedCurrentUserPosts) setCurrentUserPosts(fetchedCurrentUserPosts);
+        };
+
+        getDBData();
+
+    }, [])
 
     return (
         <div className="text-slate-600">
@@ -17,7 +31,7 @@ const Account = async () => {
 
             <main className="pt-[7rem]">
                 <Profile />
-                <Posts />
+                <Posts posts={currentUserPosts} />
             </main>
 
         </div>
